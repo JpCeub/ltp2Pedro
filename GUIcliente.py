@@ -6,53 +6,56 @@ from datetime import datetime
 def iniciar_interface():
     root = tk.Tk()
     root.title("Sistema de Clientes e Pedidos")
+    root.geometry("900x600")
+    root.configure(bg="#f0f0f0")
 
     # Frame principal
-    frame_principal = tk.Frame(root)
+    frame_principal = tk.Frame(root, bg="#f0f0f0")
     frame_principal.pack(padx=10, pady=10, fill="both", expand=True)
 
     # --- Frame Clientes ---
-    frame_clientes = tk.LabelFrame(frame_principal, text="Clientes")
+    frame_clientes = tk.LabelFrame(frame_principal, text="Clientes", bg="#f0f0f0")
     frame_clientes.pack(fill="x", pady=5)
 
-    tk.Label(frame_clientes, text="Nome:").grid(row=0, column=0, padx=5, pady=5, sticky="e")
+    tk.Label(frame_clientes, text="Nome:", bg="#f0f0f0").grid(row=0, column=0, padx=5, pady=5, sticky="e")
     entry_nome_cliente = tk.Entry(frame_clientes)
     entry_nome_cliente.grid(row=0, column=1, padx=5, pady=5)
 
-    tk.Label(frame_clientes, text="Telefone:").grid(row=0, column=2, padx=5, pady=5, sticky="e")
+    tk.Label(frame_clientes, text="Telefone:", bg="#f0f0f0").grid(row=0, column=2, padx=5, pady=5, sticky="e")
     entry_telefone_cliente = tk.Entry(frame_clientes)
     entry_telefone_cliente.grid(row=0, column=3, padx=5, pady=5)
 
-    tk.Button(frame_clientes, text="Adicionar", command=lambda: adicionar_cliente()).grid(row=0, column=4, padx=5)
-    tk.Button(frame_clientes, text="Atualizar", command=lambda: atualizar_cliente_selecionado()).grid(row=0, column=5, padx=5)
-    tk.Button(frame_clientes, text="Excluir", command=lambda: deletar_cliente_selecionado()).grid(row=0, column=6, padx=5)
+    tk.Button(frame_clientes, text="Adicionar", command=lambda: adicionar_cliente(), bg="#4CAF50", fg="white").grid(row=0, column=4, padx=5)
+    tk.Button(frame_clientes, text="Atualizar", command=lambda: atualizar_cliente_selecionado(), bg="#2196F3", fg="white").grid(row=0, column=5, padx=5)
+    tk.Button(frame_clientes, text="Excluir", command=lambda: deletar_cliente_selecionado(), bg="#f44336", fg="white").grid(row=0, column=6, padx=5)
+    tk.Button(frame_clientes, text="Ver Pedidos do Cliente", command=lambda: listar_pedidos_do_cliente(), bg="#FF9800", fg="white").grid(row=0, column=7, padx=5)
 
     tree_clientes = ttk.Treeview(frame_clientes, columns=("ID", "Nome", "Telefone"), show="headings")
     tree_clientes.heading("ID", text="ID")
     tree_clientes.heading("Nome", text="Nome")
     tree_clientes.heading("Telefone", text="Telefone")
-    tree_clientes.grid(row=1, column=0, columnspan=7, padx=5, pady=5, sticky="ew")
+    tree_clientes.grid(row=1, column=0, columnspan=8, padx=5, pady=5, sticky="ew")
 
     # --- Frame Pedidos ---
-    frame_pedidos = tk.LabelFrame(frame_principal, text="Pedidos")
+    frame_pedidos = tk.LabelFrame(frame_principal, text="Pedidos", bg="#f0f0f0")
     frame_pedidos.pack(fill="x", pady=10)
 
-    tk.Label(frame_pedidos, text="Cliente:").grid(row=0, column=0, padx=5, pady=5, sticky="e")
+    tk.Label(frame_pedidos, text="Cliente:", bg="#f0f0f0").grid(row=0, column=0, padx=5, pady=5, sticky="e")
     cliente_var = tk.StringVar()
     menu_cliente = ttk.OptionMenu(frame_pedidos, cliente_var, "")
     menu_cliente.grid(row=0, column=1, padx=5, pady=5)
 
-    tk.Label(frame_pedidos, text="Descrição:").grid(row=0, column=2, padx=5, pady=5, sticky="e")
+    tk.Label(frame_pedidos, text="Descrição:", bg="#f0f0f0").grid(row=0, column=2, padx=5, pady=5, sticky="e")
     entry_descricao_pedido = tk.Entry(frame_pedidos)
     entry_descricao_pedido.grid(row=0, column=3, padx=5, pady=5)
 
-    tk.Label(frame_pedidos, text="Data (YYYY-MM-DD):").grid(row=0, column=4, padx=5, pady=5, sticky="e")
+    tk.Label(frame_pedidos, text="Data (YYYY-MM-DD):", bg="#f0f0f0").grid(row=0, column=4, padx=5, pady=5, sticky="e")
     entry_data_pedido = tk.Entry(frame_pedidos)
     entry_data_pedido.grid(row=0, column=5, padx=5, pady=5)
 
-    tk.Button(frame_pedidos, text="Adicionar Pedido", command=lambda: adicionar_pedido()).grid(row=1, column=0, columnspan=2, pady=5)
-    tk.Button(frame_pedidos, text="Atualizar Pedido", command=lambda: atualizar_pedido_selecionado()).grid(row=1, column=2, columnspan=2, pady=5)
-    tk.Button(frame_pedidos, text="Excluir Pedido", command=lambda: deletar_pedido_selecionado()).grid(row=1, column=4, columnspan=2, pady=5)
+    tk.Button(frame_pedidos, text="Adicionar Pedido", command=lambda: adicionar_pedido(), bg="#4CAF50", fg="white").grid(row=1, column=0, columnspan=2, pady=5)
+    tk.Button(frame_pedidos, text="Atualizar Pedido", command=lambda: atualizar_pedido_selecionado(), bg="#2196F3", fg="white").grid(row=1, column=2, columnspan=2, pady=5)
+    tk.Button(frame_pedidos, text="Excluir Pedido", command=lambda: deletar_pedido_selecionado(), bg="#f44336", fg="white").grid(row=1, column=4, columnspan=2, pady=5)
 
     tree_pedidos = ttk.Treeview(frame_principal, columns=("ID", "Cliente", "Descrição", "Data"), show="headings")
     tree_pedidos.heading("ID", text="ID")
@@ -130,6 +133,15 @@ def iniciar_interface():
             if messagebox.askyesno("Confirmação", "Deseja excluir este pedido?"):
                 bdcliente.deletar_pedido(pedido_id)
                 carregar_pedidos()
+
+    def listar_pedidos_do_cliente():
+        selecionado = tree_clientes.selection()
+        if selecionado:
+            cliente_id = tree_clientes.item(selecionado)['values'][0]
+            pedidos = bdcliente.listar_pedidos_por_cliente(cliente_id)
+            tree_pedidos.delete(*tree_pedidos.get_children())
+            for pedido in pedidos:
+                tree_pedidos.insert('', 'end', values=pedido)
 
     carregar_clientes()
     carregar_pedidos()
